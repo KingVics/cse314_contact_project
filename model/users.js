@@ -21,6 +21,9 @@ class User {
     }
 
     static async getUserById(id) {
+        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+            return null;
+        }
         const collection = await User.getCollection();
         const user = await collection.findOne({ _id: new ObjectId(id) });
         return user;
