@@ -28,6 +28,33 @@ class User {
         const user = await collection.findOne({ _id: new ObjectId(id) });
         return user;
     }
+
+    static async createUser(userData) {
+        const collection = await User.getCollection();
+        const result = await collection.insertOne(userData);
+        return result.insertedId;
+    }
+
+    static async updateUser(id, updateData) {
+        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+            return null;
+        }
+        const collection = await User.getCollection();
+        const result = await collection.updateOne(
+            { _id: new ObjectId(id) },
+            { $set: updateData }
+        );
+        return result.modifiedCount > 0;
+    }
+
+    static async deleteUser(id) {
+        if (typeof id !== 'string' || !ObjectId.isValid(id)) {
+            return null;
+        }
+        const collection = await User.getCollection();
+        const result = await collection.deleteOne({ _id: new ObjectId(id) });
+        return result.deletedCount > 0;
+    }
 }
 
 export default User;

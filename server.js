@@ -1,10 +1,15 @@
 import 'dotenv/config';
 import express from "express";
 import cors from "cors";
+import swaggerUi from 'swagger-ui-express';
 import { getDatabase } from "./db/connection.js";
 
 // routes
 import { userRoute } from "./route/index.js";
+import { swaggerDoc } from "./swagger/swagger.js";
+
+
+
 
 // Create an instance of the Express application
 const app = express();
@@ -17,6 +22,11 @@ const PORT = process.env.PORT || 5000;
 
 
 // Use the userRoute for handling requests to /users
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+app.get('/api/v1/docs.json', (_req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerDoc);
+});
 app.use("/", userRoute);
 
 
